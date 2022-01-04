@@ -1,0 +1,59 @@
+specVersion: 0.0.1
+description: None
+repository: ""
+schema: ./schema.graphql
+network:
+  endpoint: wss://kusama.api.onfinality.io/public-ws
+  dictionary: https://api.subquery.network/sq/subquery/dictionary-kusama
+definitions:
+  mapping: &mymapping
+    handlers:
+      - handler: handleCall
+        kind: substrate/CallHandler
+        filter:
+          module: utility
+          method: batch_all
+          success: true
+      - handler: handleCall
+        kind: substrate/CallHandler
+        filter:
+          module: utility
+          method: batch
+          success: true
+      - handler: handleCall
+        kind: substrate/CallHandler
+        filter:
+          module: system
+          method: remark
+          success: true
+      - handler: handleRemark
+        kind: substrate/CallHandler
+        filter:
+          module: utility
+          method: batch_all
+          success: true
+      - handler: handleRemark
+        kind: substrate/CallHandler
+        filter:
+          module: utility
+          method: batch
+          success: true
+      - handler: handleRemark
+        kind: substrate/CallHandler
+        filter:
+          module: system
+          method: remark
+          success: true
+dataSources:
+  - name: main
+    kind: substrate/Runtime
+    filter:
+      specName: kusama
+    startBlock: 4892957
+    mapping: *mymapping # can reuse or change
+  - name: westendRuntime
+    kind: substrate/Runtime
+    filter:
+      specName: westend
+    startBlock: 7161214
+    mapping: *mymapping # can reuse or change
