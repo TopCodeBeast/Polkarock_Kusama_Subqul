@@ -15,7 +15,7 @@ async function mint(remark: RemarkResult) {
     const entity = await CollectionEntity.get(collection.id)
     canOrElseError<CollectionEntity>(exists, entity)
     const final = CollectionEntity.create(collection)
-    
+
     final.name = collection.name.trim()
     final.max = Number(collection.max)
     final.issuer = remark.caller
@@ -43,7 +43,7 @@ async function mintNFT(remark: RemarkResult) {
     canOrElseError<CollectionEntity>(exists, collection, true)
     isOwnerOrElseError(collection, remark.caller)
     const final = NFTEntity.create(nft)
-    
+
     final.id = getNftId(nft, remark.blockNumber)
     final.issuer = remark.caller
     final.currentOwner = remark.caller
@@ -54,10 +54,12 @@ async function mintNFT(remark: RemarkResult) {
     final.collectionId = nft.collection
     final.sn = nft.sn
     final.metadata = nft.metadata
-    final.price = BigInt(0) 
+    final.price = BigInt(0)
     final.burned = false
     final.events = [eventFrom(RmrkEvent.MINTNFT, remark, '')]
-    
+    final.createdAt = remark.timestamp
+    final.updatedAt = remark.timestamp
+
     logger.info(`SAVED [MINT] ${final.id}`)
     await final.save()
   } catch (e) {
@@ -79,6 +81,7 @@ async function send(remark: RemarkResult) {
     nft.currentOwner = interaction.metadata
     nft.price = BigInt(0)
     nft.events.push(eventFrom(RmrkEvent.SEND, remark, interaction.metadata))
+    nft.updatedAt = remark.timestamp
     await nft.save()
 
   } catch (e) {
@@ -89,7 +92,7 @@ async function send(remark: RemarkResult) {
 
 async function buy(remark: RemarkResult) {
   let interaction = null
-  
+
   try {
     interaction = ensureInteraction(NFTUtils.unwrap(remark.value) as RmrkInteraction)
     const nft = await NFTEntity.get(interaction.id)
@@ -101,6 +104,7 @@ async function buy(remark: RemarkResult) {
     nft.currentOwner = remark.caller
     nft.price = BigInt(0)
     nft.events.push(eventFrom(RmrkEvent.BUY, remark, remark.caller))
+    nft.updatedAt = remark.timestamp
     await nft.save();
 
   } catch (e) {
@@ -126,6 +130,7 @@ async function consume(remark: RemarkResult ) {
     nft.price = BigInt(0)
     nft.burned = true;
     nft.events.push(eventFrom(RmrkEvent.CONSUME, remark, ''))
+    nft.updatedAt = remark.timestamp
     await nft.save();
 
   } catch (e) {
@@ -146,6 +151,7 @@ async function list(remark: RemarkResult ) {
     isPositiveOrElseError(price)
     nft.price = price
     nft.events.push(eventFrom(RmrkEvent.LIST, remark, interaction.metadata))
+    nft.updatedAt = remark.timestamp
     await nft.save();
 
   } catch (e) {
@@ -162,7 +168,7 @@ async function list(remark: RemarkResult ) {
 
 async function changeIssuer(remark: RemarkResult ) {
   let interaction = null
-  
+
   try {
     interaction = ensureInteraction(NFTUtils.unwrap(remark.value) as RmrkInteraction)
     canOrElseError<RmrkInteraction>(hasMeta, interaction, true)
@@ -176,7 +182,7 @@ async function changeIssuer(remark: RemarkResult ) {
     logger.warn(`[CHANGEISSUER] ${e.message} ${JSON.stringify(interaction)}`)
     await logFail(JSON.stringify(interaction), e.message, RmrkEvent.CHANGEISSUER)
   }
-  
+
 
 }
 
@@ -252,7 +258,7 @@ export async function handleCall(extrinsic: SubstrateExtrinsic): Promise<void> {
         } catch (e) {
             logger.warn(`[ERR] Can't save RMRK at block ${record.blockNumber} because \n${e}`)
         }
-        
+
     }
 }
 
@@ -298,6 +304,6 @@ export async function handleRemark(extrinsic: SubstrateExtrinsic): Promise<void>
     } catch (e) {
       logger.error(`[MALFORMED] ${remark.blockNumber}::${hexToString(remark.value)}`)
     }
-      
+
   }
 }

@@ -12,7 +12,7 @@ definitions:
         kind: substrate/CallHandler
         filter:
           module: utility
-          method: batch_all
+          method: batchAll
           success: true
       - handler: handleCall
         kind: substrate/CallHandler
@@ -30,7 +30,7 @@ definitions:
         kind: substrate/CallHandler
         filter:
           module: utility
-          method: batch_all
+          method: batchAll
           success: true
       - handler: handleRemark
         kind: substrate/CallHandler
