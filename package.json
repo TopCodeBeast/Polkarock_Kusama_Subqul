@@ -1,5 +1,5 @@
 {
-  "name": "magick",
+  "name": "MetaRock_Kusama",
   "version": "1.0.0",
   "description": "None",
   "type": "module",
@@ -8,6 +8,7 @@
     "build": "tsc -b",
     "prepack": "rm -rf dist && npm build",
     "test": "jest",
+    "start": "docker-compose pull && docker-compose up --remove-orphans",
     "codegen": "./node_modules/.bin/subql codegen"
   },
   "homepage": "https://github.com/subquery/subql-starter",
@@ -17,13 +18,12 @@
     "schema.graphql",
     "project.yaml"
   ],
-  "author": "vikiival",
+  "author": "TopCodeBeast",
   "license": "MIT",
   "devDependencies": {
-    "@polkadot/api": "^6.9.2",
-    "@subql/cli": "latest",
+    "@polkadot/api": "^7",
     "@subql/types": "latest",
     "typescript": "^4.5.2"
-  },
-  "dependencies": {}
+    "@subql/cli": "latest"
+  }
 }

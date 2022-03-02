@@ -47,13 +47,5 @@ definitions:
 dataSources:
   - name: main
     kind: substrate/Runtime
-    filter:
-      specName: kusama
     startBlock: 4892957
-    mapping: *mymapping # can reuse or change
-  - name: westendRuntime
-    kind: substrate/Runtime
-    filter:
-      specName: westend
-    startBlock: 7161214
     mapping: *mymapping # can reuse or change
