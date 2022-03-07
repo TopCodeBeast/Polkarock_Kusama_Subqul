@@ -42,7 +42,7 @@ async function mintNFT(remark: RemarkResult) {
     const collection = await CollectionEntity.get(nft.collection)
     canOrElseError<CollectionEntity>(exists, collection, true)
     isOwnerOrElseError(collection, remark.caller)
-    nft.id = getNftId(nft, remark.blockNumber)
+    // nft.id = getNftId(nft, remark.blockNumber)
     const final = NFTEntity.create(nft)
 
     final.id = getNftId(nft, remark.blockNumber)
