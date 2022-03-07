@@ -24,26 +24,24 @@ type CollectionEntity @entity {
   currentOwner: String
   nfts: [NFTEntity] @derivedFrom(field: "collection")
   events: [Event]
-  blockNumber: BigInt @index
+  blockNumber: BigInt
 }
 
 type NFTEntity @entity {
-  name: String @index
+  name: String
   instance: String
   transferable: Int
   collection: CollectionEntity!
-  issuer: String @index
+  issuer: String
   sn: String
   id: ID!
   metadata: String
   currentOwner: String
   price: BigInt
   burned: Boolean
-  blockNumber: BigInt @index
+  blockNumber: BigInt
   events: [Event]
   emotes: [Emote] @derivedFrom(field: "nft")
-  createdAt: Date!
-  updatedAt: Date! @index
 }
 
 type Event @jsonField {
