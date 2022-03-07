@@ -20,10 +20,10 @@
   "author": "vikiival",
   "license": "MIT",
   "devDependencies": {
-    "@polkadot/api": "^6.9.2",
+    "@polkadot/api": "^6.0.5",
     "@subql/cli": "latest",
     "@subql/types": "latest",
-    "typescript": "^4.5.2"
+    "typescript": "^4.1.3"
   },
   "dependencies": {}
 }
